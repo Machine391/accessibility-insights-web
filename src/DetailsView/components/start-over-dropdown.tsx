@@ -7,12 +7,32 @@ import {
     IContextualMenuItem,
     IRefObject,
 } from '@fluentui/react';
+import {
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuItemProps,
+    MenuList,
+    MenuPopover,
+    MenuTrigger,
+} from '@fluentui/react-components';
+import {
+    ArrowClockwiseRegular,
+    ChevronCircleDownRegular,
+    ChevronCircleRightRegular,
+    ChevronDownRegular,
+    ChevronRightRegular,
+} from '@fluentui/react-icons';
 import { IPoint } from '@fluentui/utilities';
 import { InsightsCommandButton } from 'common/components/controls/insights-command-button';
 import { StartOverDialogType } from 'DetailsView/components/start-over-dialog';
 import * as React from 'react';
 
 import { StartOverContextMenuKeyOptions } from './details-view-right-panel';
+
+export type StartOverDropdownMenuItems = MenuItemProps & {
+    name: string;
+};
 
 export interface StartOverState {
     isContextMenuVisible: boolean;
@@ -54,20 +74,49 @@ export class StartOverDropdown extends React.Component<StartOverProps, StartOver
     public render(): JSX.Element {
         const direction = this.props.dropdownDirection;
         return (
+            // <div>
+            //     <InsightsCommandButton
+            //         iconProps={{
+            //             iconName: 'Refresh',
+            //         }}
+            //         text="Start over"
+            //         ariaLabel="start over menu"
+            //         onClick={this.openDropdown}
+            //         menuIconProps={{
+            //             iconName: dropdownDirections[direction].iconName,
+            //         }}
+            //         componentRef={this.props.buttonRef}
+            //     />
+            //     {this.renderContextMenu()}
+            // </div>
             <div>
-                <InsightsCommandButton
-                    iconProps={{
-                        iconName: 'Refresh',
-                    }}
-                    text="Start over"
-                    ariaLabel="start over menu"
-                    onClick={this.openDropdown}
-                    menuIconProps={{
-                        iconName: dropdownDirections[direction].iconName,
-                    }}
-                    componentRef={this.props.buttonRef}
-                />
-                {this.renderContextMenu()}
+                <Menu>
+                    <MenuTrigger>
+                        <MenuButton
+                            appearance="transparent"
+                            icon={<ArrowClockwiseRegular />}
+                            aria-Label="start over menu"
+                            menuIcon={
+                                direction === 'left' ? (
+                                    <ChevronRightRegular />
+                                ) : (
+                                    <ChevronDownRegular />
+                                )
+                            }
+                        >
+                            Start over V9
+                        </MenuButton>
+                    </MenuTrigger>
+                    <MenuPopover>
+                        <MenuList>
+                            {this.getMenuItemsV9().map(item => (
+                                <MenuItem key={item.key} {...item}>
+                                    {item.name}
+                                </MenuItem>
+                            ))}
+                        </MenuList>
+                    </MenuPopover>
+                </Menu>
             </div>
         );
     }
@@ -97,6 +146,34 @@ export class StartOverDropdown extends React.Component<StartOverProps, StartOver
             switcherStartOverPreferences: startOverButtonOptionPreferences,
         } = this.props;
         const items: IContextualMenuItem[] = [];
+        const assessmentKey = {
+            key: 'assessment',
+            name: `Start over ${allTestSuffix}`,
+            onClick: this.onStartOverAllTestsMenu,
+        };
+        const testKey = {
+            key: 'test',
+            name: `Start over ${singleTestSuffix}`,
+            onClick: this.onStartOverTestMenu,
+        };
+
+        items.push(assessmentKey);
+
+        if (rightPanelOptions.showTest && startOverButtonOptionPreferences.showTest) {
+            items.push(testKey);
+        }
+
+        return items;
+    }
+
+    private getMenuItemsV9(): StartOverDropdownMenuItems[] {
+        const {
+            singleTestSuffix,
+            allTestSuffix,
+            rightPanelOptions,
+            switcherStartOverPreferences: startOverButtonOptionPreferences,
+        } = this.props;
+        const items: StartOverDropdownMenuItems[] = [];
         const assessmentKey = {
             key: 'assessment',
             name: `Start over ${allTestSuffix}`,
