@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+import { FolderOpenRegular } from '@fluentui/react-icons';
 import { AssessmentDataParser } from 'common/assessment-data-parser';
 import { InsightsCommandButton } from 'common/components/controls/insights-command-button';
 import { AssessmentStoreData } from 'common/types/store-data/assessment-result-data';
@@ -30,7 +31,7 @@ export class LoadAssessmentButton extends React.Component<LoadAssessmentButtonPr
         return (
             <InsightsCommandButton
                 data-automation-id={loadAssessmentButtonAutomationId}
-                iconProps={{ iconName: 'FabricOpenFolderHorizontal' }}
+                insightsCommandButtonIconProps={{ icon: <FolderOpenRegular /> }}
                 onClick={this.props.handleLoadAssessmentButtonClick}
             >
                 Load assessment

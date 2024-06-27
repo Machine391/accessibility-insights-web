@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 import { IButton, IContextualMenuItem, IRefObject } from '@fluentui/react';
+import { ArrowClockwiseRegular } from '@fluentui/react-icons';
 import { AssessmentsProvider } from 'assessments/types/assessments-provider';
 import { InsightsCommandButton } from 'common/components/controls/insights-command-button';
 import { AssessmentStoreData } from 'common/types/store-data/assessment-result-data';
@@ -60,11 +61,28 @@ export const QuickAssessStartOverFactory: StartOverComponentFactory = {
 };
 
 export const FastpassStartOverFactory: StartOverComponentFactory = {
-    getStartOverComponent: props => {
-        return <InsightsCommandButton {...getStartOverPropsForFastPass(props)} />;
+    getStartOverComponent: props => getStartOverComponentFastPass(props),
+    getStartOverMenuItem: props => {
+        return {
+            onRender: () => <div role="menuitem">{getStartOverComponentFastPass(props)}</div>,
+        };
     },
-    getStartOverMenuItem: getStartOverPropsForFastPass,
 };
+
+export function getStartOverComponentFastPass(props: StartOverFactoryProps): JSX.Element {
+    const startOverProps = getStartOverPropsForFastPass(props);
+    return (
+        <InsightsCommandButton
+            insightsCommandButtonIconProps={{
+                icon: <ArrowClockwiseRegular />,
+                className: startOverProps.iconProps.className,
+            }}
+            {...startOverProps}
+        >
+            {startOverProps.text}
+        </InsightsCommandButton>
+    );
+}
 
 export function getStartOverComponentForAssessment(
     props: StartOverFactoryProps,

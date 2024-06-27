@@ -1,8 +1,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 import { Checkbox, Dialog, DialogFooter, DialogType, PrimaryButton, Stack } from '@fluentui/react';
+import { Link, MenuItemLink } from '@fluentui/react-components';
 import { useBoolean } from '@fluentui/react-hooks';
+import { SaveRegular } from '@fluentui/react-icons';
 import { InsightsCommandButton } from 'common/components/controls/insights-command-button';
+import { InsightsCommandButtonStyle } from 'common/components/controls/insights-command-button-style';
 import { UserConfigMessageCreator } from 'common/message-creators/user-config-message-creator';
 import { NamedFC } from 'common/react/named-fc';
 import { UserConfigurationStoreData } from 'common/types/store-data/user-configuration-store';
@@ -25,7 +28,7 @@ export const SaveAssessmentButton = NamedFC<SaveAssessmentButtonProps>(
     'SaveAssessmentButton',
     props => {
         const [dialogHidden, { setTrue: hideDialog, setFalse: showDialog }] = useBoolean(true);
-
+        const fluentv9StyleOverrides = InsightsCommandButtonStyle();
         function handleSaveAssessmentClick(event: React.MouseEvent<any>) {
             props.deps.getAssessmentActionMessageCreator().saveAssessment(event);
             if (props.userConfigurationStoreData.showSaveAssessmentDialog) {
@@ -40,14 +43,17 @@ export const SaveAssessmentButton = NamedFC<SaveAssessmentButtonProps>(
 
         return (
             <>
-                <InsightsCommandButton
-                    iconProps={{ iconName: 'Save' }}
+                <MenuItemLink
+                    icon={{
+                        className: fluentv9StyleOverrides.buttonIcon,
+                        children: <SaveRegular />,
+                    }}
                     download={props.download}
                     href={props.href}
                     onClick={handleSaveAssessmentClick}
                 >
-                    Save assessment
-                </InsightsCommandButton>
+                    Save assessment V9
+                </MenuItemLink>
                 <Dialog
                     hidden={dialogHidden}
                     onDismiss={hideDialog}

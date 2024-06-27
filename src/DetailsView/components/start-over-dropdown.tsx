@@ -18,8 +18,6 @@ import {
 } from '@fluentui/react-components';
 import {
     ArrowClockwiseRegular,
-    ChevronCircleDownRegular,
-    ChevronCircleRightRegular,
     ChevronDownRegular,
     ChevronRightRegular,
 } from '@fluentui/react-icons';
@@ -91,11 +89,11 @@ export class StartOverDropdown extends React.Component<StartOverProps, StartOver
             // </div>
             <div>
                 <Menu>
-                    <MenuTrigger>
+                    <MenuTrigger disableButtonEnhancement>
                         <MenuButton
                             appearance="transparent"
                             icon={<ArrowClockwiseRegular />}
-                            aria-Label="start over menu"
+                            aria-label="start over menu"
                             menuIcon={
                                 direction === 'left' ? (
                                     <ChevronRightRegular />

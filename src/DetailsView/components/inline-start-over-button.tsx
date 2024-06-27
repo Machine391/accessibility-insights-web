@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
-
+import { ArrowClockwiseRegular } from '@fluentui/react-icons';
 import { InsightsCommandButton } from 'common/components/controls/insights-command-button';
 import { NamedFC } from 'common/react/named-fc';
 import { VisualizationType } from 'common/types/visualization-type';
@@ -23,11 +23,12 @@ export const InlineStartOverButton = NamedFC<InlineStartOverButtonProps>(
         return (
             <InsightsCommandButton
                 onClick={rescan}
-                text="Start over"
-                iconProps={{ iconName: 'Refresh' }}
+                insightsCommandButtonIconProps={{ icon: <ArrowClockwiseRegular /> }}
                 className={styles.inlineStartOverButton}
                 data-automation-id={inlineStartOverButtonDataAutomationId}
-            />
+            >
+                Start over
+            </InsightsCommandButton>
         );
     },
 );
