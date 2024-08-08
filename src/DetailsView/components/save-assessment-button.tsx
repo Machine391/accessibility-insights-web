@@ -21,26 +21,13 @@ export interface SaveAssessmentButtonProps {
     download: string;
     href: string;
     deps: SaveAssessmentButtonDeps;
-    userConfigurationStoreData: UserConfigurationStoreData;
+    handleSaveAssesmentButtonClick: (event: React.MouseEvent<any>) => void;
 }
 
 export const SaveAssessmentButton = NamedFC<SaveAssessmentButtonProps>(
     'SaveAssessmentButton',
     props => {
-        const [dialogHidden, { setTrue: hideDialog, setFalse: showDialog }] = useBoolean(true);
         const saveAssessmentStyles = useCommandButtonStyle();
-        const handleSaveAssessmentClick = (event: React.MouseEvent<any>) => {
-            props.deps.getAssessmentActionMessageCreator().saveAssessment(event);
-            if (props.userConfigurationStoreData.showSaveAssessmentDialog) {
-                showDialog();
-            }
-        };
-
-        function handleDontShowAgainClick(event: React.MouseEvent<any>, checked?: boolean) {
-            if (checked === undefined) return;
-            props.deps.userConfigMessageCreator.setSaveAssessmentDialogState(!checked);
-        }
-
         return (
             <>
                 <InsightsCommandButton
@@ -48,53 +35,13 @@ export const SaveAssessmentButton = NamedFC<SaveAssessmentButtonProps>(
                     className={saveAssessmentStyles?.assessmentButton}
                     download={props.download}
                     href={props.href}
-                    onClick={handleSaveAssessmentClick}
+                    onClick={props.handleSaveAssesmentButtonClick}
                     insightsCommandButtonIconProps={{
                         icon: <FluentUIV9Icon iconName="SaveRegular" />,
                     }}
                 >
                     Save assessment
                 </InsightsCommandButton>
-
-                <Dialog
-                    hidden={dialogHidden}
-                    onDismiss={hideDialog}
-                    dialogContentProps={{
-                        type: DialogType.normal,
-                        title: 'Assessment saved',
-                    }}
-                    modalProps={{
-                        isBlocking: false,
-                        containerClassName: styles.insightsDialogMainOverride,
-                    }}
-                >
-                    <div className={styles.dialogBody}>
-                        To load this assessment, use the <strong>Load assessment</strong> button in
-                        the Accessibility Insights Assessment command bar.
-                    </div>
-                    <DialogFooter>
-                        <Stack
-                            horizontal
-                            horizontalAlign="space-between"
-                            wrap
-                            verticalAlign="center"
-                            tokens={{ childrenGap: 6 }}
-                        >
-                            <Stack.Item grow disableShrink>
-                                <Checkbox
-                                    checked={
-                                        !props.userConfigurationStoreData.showSaveAssessmentDialog
-                                    }
-                                    label="Don't show again"
-                                    onChange={handleDontShowAgainClick}
-                                />
-                            </Stack.Item>
-                            <Stack.Item grow>
-                                <PrimaryButton onClick={hideDialog} text="Got it" />
-                            </Stack.Item>
-                        </Stack>
-                    </DialogFooter>
-                </Dialog>
             </>
         );
     },

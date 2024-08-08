@@ -55,6 +55,7 @@ import { ReportGenerator } from 'reports/report-generator';
 import { AssessmentStoreData } from '../../common/types/store-data/assessment-result-data';
 import { TabStoreData } from '../../common/types/store-data/tab-store-data';
 import { DetailsRightPanelConfiguration } from './details-view-right-panel';
+import { SaveAssessmentDialog } from 'DetailsView/components/save-assessment-dialog';
 
 export type DetailsViewCommandBarDeps = {
     getCurrentDate: () => Date;
@@ -75,6 +76,7 @@ export type DetailsViewCommandBarState = {
     isInvalidLoadAssessmentDialogOpen: boolean;
     isLoadAssessmentDialogOpen: boolean;
     isReportExportDialogOpen: boolean;
+    isSaveAssessmentDialogOpen: boolean;
     loadedAssessmentData: VersionedAssessmentData;
     startOverDialogState: StartOverDialogState;
 };
@@ -124,6 +126,7 @@ export class DetailsViewCommandBar extends React.Component<
             isInvalidLoadAssessmentDialogOpen: false,
             isLoadAssessmentDialogOpen: false,
             isReportExportDialogOpen: false,
+            isSaveAssessmentDialogOpen: false,
             loadedAssessmentData: {} as VersionedAssessmentData,
             startOverDialogState: 'none',
         };
@@ -143,6 +146,7 @@ export class DetailsViewCommandBar extends React.Component<
                 {this.renderLoadAssessmentDialog()}
                 {this.renderStartOverDialog()}
                 {this.renderTransferToAssessmentDialog()}
+                {this.renderSaveAssessmentDialog()}
             </div>
         );
     }
@@ -263,7 +267,18 @@ export class DetailsViewCommandBar extends React.Component<
     private renderSaveAssessmentButton = (): JSX.Element | null => {
         return this.props.switcherNavConfiguration.SaveAssessmentButton({
             ...this.props,
+            handleSaveAssesmentButtonClick: this.handleSaveAssessmentButtonClick,
         });
+    };
+
+    private renderSaveAssessmentDialog = (): JSX.Element | null => {
+        return (
+            <SaveAssessmentDialog
+                {...this.props}
+                isOpen={this.state.isSaveAssessmentDialogOpen}
+                onClose={this.toggleSaveAssessmentDialog}
+            ></SaveAssessmentDialog>
+        );
     };
 
     private renderTransferToAssessmentButton = (): JSX.Element | null => {
@@ -325,6 +340,19 @@ export class DetailsViewCommandBar extends React.Component<
         this.setState(prevState => ({
             isLoadAssessmentDialogOpen: !prevState.isLoadAssessmentDialogOpen,
         }));
+    };
+
+    private toggleSaveAssessmentDialog = () => {
+        this.setState(prevState => ({
+            isSaveAssessmentDialogOpen: !prevState.isSaveAssessmentDialogOpen,
+        }));
+    };
+
+    private handleSaveAssessmentButtonClick = (event: React.MouseEvent<any>) => {
+        this.props.deps.getAssessmentActionMessageCreator().saveAssessment(event);
+        if (this.props.userConfigurationStoreData.showSaveAssessmentDialog) {
+            this.toggleSaveAssessmentDialog();
+        }
     };
 
     private setAssessmentState = (parsedAssessmentData: VersionedAssessmentData) => {
